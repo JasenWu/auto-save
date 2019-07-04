@@ -1,14 +1,13 @@
 <?php
- define('INTERVAL',3);//定时间隔时间
+define('INTERVAL',3);//定时间隔时间
 require('./db.php');
 class sysData {
- 
-    var  $ch,$src ;//curl_init
+    var  
+    $ch,//curl_init
+    $src ='http://localhost/blogdemo2/backend/web/index.php?r=user%2Ftest';//数据来源
 
     public function __construct(){
-      $this->src = 'http://localhost/blogdemo2/backend/web/index.php?r=user%2Ftest';
       $this->ch = curl_init();
-  
     }
 
     protected function getResource($src){
@@ -25,10 +24,6 @@ class sysData {
       // 关闭cURL资源，并且释放系统资源
    
     }
-
-   
-
-
     
     protected function insertData($conn,$i){
      
@@ -41,8 +36,7 @@ class sysData {
       $sql_count  = "select *  FROM `MyGuests`";
 
       $count = $conn->query($sql_count)->num_rows;
-     
-    
+
       $isExsit = $conn->query($sql_select)->num_rows; 
       // if($isExsit){
       //         echo('  recorded');
@@ -58,7 +52,6 @@ class sysData {
    
 
     public function autoInsert(){ 
-    
       global $conn;
       $i = 1;
       while(1){
@@ -97,5 +90,12 @@ class sysData {
     //       echo "创建数据表错误: " . $conn->error;
     //   }
     // }
+
+    function __destruct() {
+      global $conn;  
+      $conn->close();
+      curl_close($this->ch);
+      print "销毁 " ;
+    }
 
 }
