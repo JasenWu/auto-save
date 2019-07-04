@@ -1,6 +1,28 @@
 <?php
     require('./db.php');
-    
+
+    define('INTERVAL',3);//定时间隔时间
+    $ch = curl_init();
+ 
+   
+
+    function getResource($src = "http://www.runoob.com/"){
+        // 创建一个新cURL资源
+        global $ch;
+        
+        // 设置URL和相应的选项
+        curl_setopt($ch, CURLOPT_URL, $src);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        // 抓取URL并把它传递给浏览器
+         curl_exec($ch);
+         return curl_multi_getcontent($ch);
+
+        // 关闭cURL资源，并且释放系统资源
+        //curl_close($ch);
+    }
+
     function createDB(){
         // 创建数据库
         $sql = "CREATE DATABASE myDB";
@@ -31,37 +53,37 @@
 
     //createTable($conn);
     function insertData($conn,$i){
-        $name = "'John____{$i}'";
-        $sql = "INSERT INTO MyGuests (firstname, lastname, email)
-        VALUES (" . $name . ", 'Doe', 'john@example.com')";
-        $sql_select = "select * FROM `MyGuests` where firstname = " . $name;
-        echo $sql_select;
+        $res =   getResource('http://localhost/blogdemo2/backend/web/index.php?r=user%2Ftest');
+        $res = json_decode($res);
+
+        $sql = "INSERT INTO MyGuests (firstname, lastname, email) VALUES  ('{$res->firstname }' , '{$res->lastname}', '{$res->email}')";
+    
+        $sql_select = "select * FROM `MyGuests` where firstname = '{$res->firstname}'";
+      
         $isExsit = $conn->query($sql_select)->num_rows;
-        echo $isExsit;
-        if($isExsit){
-                echo('recorded');
-                
-                return false;
-        }
+        
+        // if($isExsit){
+        //         echo('  recorded');
+        //         return false;
+        // }
         if ($conn->query($sql) === TRUE) {
-            echo "新记录插入成功";
+            echo "新记录插入成功" . PHP_EOL;
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
     }
 
-    function autoInsert($conn){
+    function autoInsert($conn){ 
         $i = 1;
         while(1){
             $i++;
-            sleep(3);
+            sleep(INTERVAL);
             insertData($conn,$i);
-            echo date("H:i:s") . PHP_EOL;
+            //echo date("H:i:s") . PHP_EOL;
         }
         
     }
-
-    //insertData($conn);
+ 
     autoInsert($conn);
 
     // $conn->close();
