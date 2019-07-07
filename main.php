@@ -6,27 +6,15 @@ require_once('./source.php');
 
 class sysData {
     var  
-    $ch,//curl_init
-    $src ='http://localhost/blogdemo2/backend/web/index.php?r=user%2Ftest';//数据来源
+    $ch;//curl_init
+     
 
     public function __construct(){
       $this->ch = curl_init();
     }
 
-    protected function getResource($src){
+    protected function getResource(){
       return initResumes();
-      // 创建一个新cURL资源
-      // 设置URL和相应的选项
-      curl_setopt($this->ch, CURLOPT_URL, $src);
-      curl_setopt($this->ch, CURLOPT_HEADER, 0);
-      curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
-
-      // 抓取URL并把它传递给浏览器
-      curl_exec($this->ch);
-      return curl_multi_getcontent($this->ch);
-
-      // 关闭cURL资源，并且释放系统资源
-   
     }
 
     protected function insert($conn,$res){
@@ -42,6 +30,8 @@ class sysData {
       //         echo('  recorded');
       //         return false;
       // }
+
+      
       if ($reslt = $conn->query($sql) === TRUE) {
           echo($count);
           echo ":新记录插入成功" . PHP_EOL;
