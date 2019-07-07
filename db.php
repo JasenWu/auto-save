@@ -1,9 +1,17 @@
 <?php
 
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$dbname = "myDB";
+
+//开发机
+
+$servername = "192.168.74.1";
+$username = "general";
+$password = "innotechx";
+
+//本地
+// $servername = "127.0.0.1";
+// $username = "root";
+// $password = "";
+$dbname = "jasonTest";
  
 // 创建连接
  
