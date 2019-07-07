@@ -1,6 +1,9 @@
 <?php
-define('INTERVAL',3);//定时间隔时间
+define('INTERVAL',10);//定时间隔时间
 require('./db.php');
+require_once('./source.php');
+
+
 class sysData {
     var  
     $ch,//curl_init
@@ -11,6 +14,7 @@ class sysData {
     }
 
     protected function getResource($src){
+      return initResumes();
       // 创建一个新cURL资源
       // 设置URL和相应的选项
       curl_setopt($this->ch, CURLOPT_URL, $src);
@@ -24,13 +28,9 @@ class sysData {
       // 关闭cURL资源，并且释放系统资源
    
     }
-    
-    protected function insertData($conn,$i){
-     
-      $res =   $this->getResource($this->src);
-      $res = json_decode($res);
 
-      $sql = "INSERT INTO MyGuests (firstname, lastname, email) VALUES  ('{$res->firstname }' , '{$res->lastname}', '{$res->email}')";
+    protected function insert($conn,$res){
+      $sql = "INSERT INTO MyGuests (firstname, lastname, email) VALUES  ('{$res->resumeContent->personalInformation->email }' , '{$res->resumeContent->personalInformation->email}', '{$res->resumeContent->personalInformation->email}')";
 
       $sql_select = "select * FROM `MyGuests` where firstname = '{$res->firstname}'";
       $sql_count  = "select *  FROM `MyGuests`";
@@ -48,6 +48,19 @@ class sysData {
       } else {
           echo "Error: " . $sql . "<br>" . $conn->error;
       }
+    }
+    
+    protected function insertData($conn,$i){
+     
+      $res =   $this->getResource($this->src);
+     // $res = json_decode($res);
+
+      
+
+      foreach($res as $v){
+        $this->insert($conn,$v);
+        //echo($v->resumeId  .  PHP_EOL);
+      } 
     }
    
 
