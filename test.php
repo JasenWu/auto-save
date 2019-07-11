@@ -1,5 +1,9 @@
 <?php
-
+date_default_timezone_set("PRC");
+//ini_set('date.timezone','Asia/Shanghai');
+$d = date('Y-m-d h:m:s');
+var_dump($d);
+die;
 
 class __Parent{
   function __construct($name){
